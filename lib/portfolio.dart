@@ -8,6 +8,7 @@ import 'package:lottie/lottie.dart';
 import 'package:my_portfolio/wordanimation.dart';
 import 'package:simple_icons/simple_icons.dart';
 import 'package:timeline_tile/timeline_tile.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:async';
 import 'EmailFlyingicon.dart';
 import 'crousalslider.dart';
@@ -179,6 +180,11 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
     },
   ];
 
+  TextEditingController EmailController=TextEditingController();
+  TextEditingController NameController=TextEditingController();
+  TextEditingController MessageController=TextEditingController();
+
+
   Future<void> scrollTo(GlobalKey key) async {
     final ctx = key.currentContext;
     if (ctx == null) return;
@@ -190,6 +196,66 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
       curve: Curves.easeInOut,
       alignment: 0, // 0 = bring to top, 0.5 = center, 1 = bottom
     );
+  }
+
+  Future<void> openCV() async {
+    final Uri cvUrl = Uri.parse('https://your-cv-link.com/YogeshDadhichCV.pdf'); // 👈 Replace with your real link
+
+    if (await canLaunchUrl(cvUrl)) {
+      await launchUrl(cvUrl, mode: LaunchMode.externalApplication);
+    } else {
+      throw Exception('Could not open CV');
+    }
+  }
+
+  Future<void> openWhatsApp(String phone, String message) async {
+    final Uri whatsappUrl = Uri.parse("https://wa.me/$phone?text=${Uri.encodeComponent(message)}");
+
+    if (await canLaunchUrl(whatsappUrl)) {
+      await launchUrl(whatsappUrl, mode: LaunchMode.externalApplication);
+    } else {
+      throw Exception("Could not open WhatsApp");
+    }
+  }
+
+
+  Future<void> openEmail() async {
+    final Uri emailUri = Uri(
+      scheme: 'mailto',
+      path: 'example@gmail.com',
+      queryParameters: {
+        'subject': 'Hello from Flutter 💙',
+        'body': 'Hi Yogesh,\n\nThis is a test email sent from my Flutter app.'
+      },
+    );
+
+    if (await canLaunchUrl(emailUri)) {
+      await launchUrl(emailUri);
+    } else {
+      throw Exception('Could not open email app');
+    }
+  }
+
+  Future<void> openLinkedIn() async {
+    // 👇 apna LinkedIn profile URL yahan daalo
+    final Uri linkedInUrl = Uri.parse('https://www.linkedin.com/in/yogesh-dadhich');
+
+    if (await canLaunchUrl(linkedInUrl)) {
+      await launchUrl(linkedInUrl, mode: LaunchMode.externalApplication);
+    } else {
+      throw Exception('Could not open LinkedIn');
+    }
+  }
+
+  Future<void> openGitHub() async {
+    // 👇 apna GitHub profile URL yahan daalo
+    final Uri githubUrl = Uri.parse('https://github.com/yogeshdadhich');
+
+    if (await canLaunchUrl(githubUrl)) {
+      await launchUrl(githubUrl, mode: LaunchMode.externalApplication);
+    } else {
+      throw Exception('Could not open GitHub');
+    }
   }
 
   @override
@@ -229,6 +295,113 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: Thememode
+                  ? const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.topRight,
+                colors: [Color(0xff0D1D2D), Color(0xff103875)],
+              )
+                  : const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Colors.white, Colors.white],
+              ),
+            ),
+          ),
+          elevation: 4,
+          title: Container(
+            width: double.infinity,
+            // height: double.infinity,
+            padding: const EdgeInsets.only(
+                top: 25, left: 150, right: 150, bottom: 20),
+            decoration: BoxDecoration(
+              gradient: Thememode
+                  ? const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.topRight,
+                colors: [Color(0xff0D1D2D), Color(0xff103875)],
+              )
+                  : const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Colors.white, Colors.white],
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Left side name
+                Row(
+                  children: [
+                    Text(
+                      "Yogesh ",
+                      style: TextStyle(
+                        color: Thememode ? Colors.white : Colors.black,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 23,
+                      ),
+                    ),
+                    const Text(
+                      "Dadhich",
+                      style: TextStyle(
+                        color: Color(0xff0a7fff),
+                        fontWeight: FontWeight.w900,
+                        fontSize: 23,
+                      ),
+                    ),
+                  ],
+                ),
+
+                // Right side menu
+                Row(
+                  children: [
+                    _buildMenuItem("About"),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+                    _buildMenuItem("Skills"),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+                    _buildMenuItem("Experience"),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+                    _buildMenuItem("Projects"),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+                    _buildMenuItem("Certification"),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+                    _buildMenuItem("Contact"),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+
+                    // Theme switch button
+                    Container(
+                      decoration: BoxDecoration(
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0xFF0740F1),
+                            offset: Offset(0, 0),
+                            blurRadius: 10,
+                            spreadRadius: 1,
+                          )
+                        ],
+                        borderRadius: BorderRadius.circular(20),
+                        color: const Color(0xFF0740F1),
+                      ),
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() => {Thememode = !Thememode});
+                        },
+                        icon: Thememode
+                            ? const Icon(Icons.light_mode_outlined, color: Colors.white)
+                            : const Icon(Icons.dark_mode_outlined, color: Colors.white),
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+
         body: SingleChildScrollView(
           controller: _scrollController,
           child: Container(
@@ -250,84 +423,85 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                     ),
             ),
             child: Column(
+              key: aboutKey,
               children: [
                 // 🔹 Top Menu
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Left side name
-                    Row(
-                      children: [
-                        Text(
-                          "Yogesh ",
-                          style: TextStyle(
-                            color: Thememode ? Colors.white : Colors.black,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 23,
-                          ),
-                        ),
-                        const Text(
-                          "Dadhich",
-                          style: TextStyle(
-                            color: Color(0xff0a7fff),
-                            fontWeight: FontWeight.w900,
-                            fontSize: 23,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    // Right side menu
-                    Row(
-                      children: [
-                        _buildMenuItem("About"),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.02),
-                        _buildMenuItem("Skills"),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.02),
-                        _buildMenuItem("Experience"),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.02),
-                        _buildMenuItem("Projects"),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.02),
-                        _buildMenuItem("Certification"),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.02),
-                        _buildMenuItem("Contact"),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.02),
-
-                        // Theme switch button
-                        Container(
-                          decoration: BoxDecoration(
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0xFF0740F1),
-                                offset: Offset(0, 0),
-                                blurRadius: 10,
-                                spreadRadius: 1,
-                              )
-                            ],
-                            borderRadius: BorderRadius.circular(20),
-                            color: const Color(0xFF0740F1),
-                          ),
-                          child: IconButton(
-                            onPressed: () {
-                              setState(() => {Thememode = !Thememode});
-                            },
-                            icon: Thememode
-                                ? const Icon(Icons.light_mode_outlined,
-                                    color: Colors.white)
-                                : const Icon(Icons.dark_mode_outlined,
-                                    color: Colors.white),
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     // Left side name
+                //     Row(
+                //       children: [
+                //         Text(
+                //           "Yogesh ",
+                //           style: TextStyle(
+                //             color: Thememode ? Colors.white : Colors.black,
+                //             fontWeight: FontWeight.w900,
+                //             fontSize: 23,
+                //           ),
+                //         ),
+                //         const Text(
+                //           "Dadhich",
+                //           style: TextStyle(
+                //             color: Color(0xff0a7fff),
+                //             fontWeight: FontWeight.w900,
+                //             fontSize: 23,
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //
+                //     // Right side menu
+                //     Row(
+                //       children: [
+                //         _buildMenuItem("About"),
+                //         SizedBox(
+                //             width: MediaQuery.of(context).size.width * 0.02),
+                //         _buildMenuItem("Skills"),
+                //         SizedBox(
+                //             width: MediaQuery.of(context).size.width * 0.02),
+                //         _buildMenuItem("Experience"),
+                //         SizedBox(
+                //             width: MediaQuery.of(context).size.width * 0.02),
+                //         _buildMenuItem("Projects"),
+                //         SizedBox(
+                //             width: MediaQuery.of(context).size.width * 0.02),
+                //         _buildMenuItem("Certification"),
+                //         SizedBox(
+                //             width: MediaQuery.of(context).size.width * 0.02),
+                //         _buildMenuItem("Contact"),
+                //         SizedBox(
+                //             width: MediaQuery.of(context).size.width * 0.02),
+                //
+                //         // Theme switch button
+                //         Container(
+                //           decoration: BoxDecoration(
+                //             boxShadow: const [
+                //               BoxShadow(
+                //                 color: Color(0xFF0740F1),
+                //                 offset: Offset(0, 0),
+                //                 blurRadius: 10,
+                //                 spreadRadius: 1,
+                //               )
+                //             ],
+                //             borderRadius: BorderRadius.circular(20),
+                //             color: const Color(0xFF0740F1),
+                //           ),
+                //           child: IconButton(
+                //             onPressed: () {
+                //               setState(() => {Thememode = !Thememode});
+                //             },
+                //             icon: Thememode
+                //                 ? const Icon(Icons.light_mode_outlined,
+                //                     color: Colors.white)
+                //                 : const Icon(Icons.dark_mode_outlined,
+                //                     color: Colors.white),
+                //           ),
+                //         )
+                //       ],
+                //     ),
+                //   ],
+                // ),
 
                 const SizedBox(height: 30),
 
@@ -372,7 +546,7 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                         const CircleAvatar(
                           radius: 80,
                           backgroundImage:
-                              AssetImage("assets/images/profile.jpg"),
+                              AssetImage("assets/images/WhatsApp Image 2025-10-24 at 17.09.34_df2070d0.jpg"),
                         ),
                       ],
                     ),
@@ -393,24 +567,24 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                                     style: TextStyle(
                                         fontWeight: FontWeight.w900,
                                         fontSize: 25,
-                                        color: Colors.white,
+                                        color: Thememode?Colors.white:Colors.black,
                                         fontFamily: "Montserrat"),
                                   ),
                                   const SizedBox(height: 6),
-                                  const Text(
+                                  Text(
                                     "Years",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w100,
                                         fontSize: 15,
-                                        color: Colors.white54),
+                                        color: Thememode?Colors.white54:Colors.black),
                                   ),
                                   const SizedBox(height: 3),
-                                  const Text(
+                                   Text(
                                     "Experience",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w100,
                                         fontSize: 15,
-                                        color: Colors.white54),
+                                        color: Thememode?Colors.white54:Colors.black),
                                   )
                                 ],
                               ),
@@ -421,24 +595,24 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                                     style: TextStyle(
                                         fontWeight: FontWeight.w900,
                                         fontSize: 25,
-                                        color: Colors.white,
+                                        color: Thememode?Colors.white:Colors.black,
                                         fontFamily: "Montserrat"),
                                   ),
                                   const SizedBox(height: 6),
-                                  const Text(
+                                   Text(
                                     "Projects",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w100,
                                         fontSize: 15,
-                                        color: Colors.white54),
+                                        color: Thememode?Colors.white54:Colors.black),
                                   ),
                                   const SizedBox(height: 3),
-                                  const Text(
+                                   Text(
                                     "Completed",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w100,
                                         fontSize: 15,
-                                        color: Colors.white54),
+                                        color: Thememode?Colors.white54:Colors.black),
                                   )
                                 ],
                               ),
@@ -449,24 +623,24 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                                     style: TextStyle(
                                         fontWeight: FontWeight.w900,
                                         fontSize: 25,
-                                        color: Colors.white,
+                                        color: Thememode?Colors.white:Colors.black,
                                         fontFamily: "Montserrat"),
                                   ),
                                   const SizedBox(height: 6),
-                                  const Text(
+                                   Text(
                                     "Happy",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w100,
                                         fontSize: 15,
-                                        color: Colors.white54),
+                                        color: Thememode?Colors.white54:Colors.black),
                                   ),
                                   const SizedBox(height: 3),
-                                  const Text(
+                                   Text(
                                     "Clients",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w100,
                                         fontSize: 15,
-                                        color: Colors.white54),
+                                        color: Thememode?Colors.white54:Colors.black),
                                   )
                                 ],
                               )
@@ -520,8 +694,8 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                             WordCursorText(
                               text: "Hi, I'm Yogesh Dadhich",
                               style: GoogleFonts.rubik(
-                                textStyle: const TextStyle(
-                                  color: Colors.white,
+                                textStyle: TextStyle(
+                                  color: Thememode?Colors.white:Colors.black,
                                   fontWeight: FontWeight.w700,
                                   fontSize: 29,
                                   letterSpacing: 1,
@@ -549,13 +723,13 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                                 baseline: 22.9,
                                 baselineType: TextBaseline.alphabetic,
                                 child: Icon(Icons.work,
-                                    size: 16, color: Colors.white),
+                                    size: 16, color: Thememode?Colors.white:Colors.black),
                               ),
                               SizedBox(width: 7),
                               Text("Software Engineer",
                                   style: GoogleFonts.rubik(
                                     textStyle: TextStyle(
-                                      color: Colors.white,
+                                      color: Thememode?Colors.white:Colors.black,
                                       fontWeight: FontWeight.w600,
                                       fontSize: 21.2,
                                     ),
@@ -577,7 +751,7 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                               Text("Laxmangarh, Sikar, Rajasthan",
                                   style: GoogleFonts.rubik(
                                     textStyle: TextStyle(
-                                      color: Colors.white,
+                                      color: Thememode?Colors.white:Colors.black,
                                       fontWeight: FontWeight.w600,
                                       fontSize: 21.2,
                                     ),
@@ -611,7 +785,7 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                             Center(
                               child: Text("Get In Touch",
                                   style: GoogleFonts.rubik(
-                                      color: Colors.white,
+                                      color: Thememode?Colors.white:Colors.black,
                                       fontWeight: FontWeight.w600,
                                       wordSpacing: 0.5,
                                       fontSize: 24.2)),
@@ -627,7 +801,9 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                               ),
                             ),
                             TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  openWhatsApp("919116982831", "Hello 👋 This is a test message!");
+                                },
                                 child: Container(
                                   height: 50,
                                   width: 100,
@@ -656,7 +832,7 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w400,
-                                color: Colors.white,
+                                color: Thememode?Colors.white:Colors.black,
                               ),
                             )
                           ],
@@ -673,7 +849,9 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                                   color: Colors.blue.withOpacity(0.2),
                                   borderRadius: BorderRadius.circular(10)),
                               child: TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    openEmail();
+                                  },
                                   child: Icon(
                                     Icons.mail_outline,
                                     color: Colors.blue,
@@ -690,7 +868,9 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                                   color: Colors.blue.withOpacity(0.2),
                                   borderRadius: BorderRadius.circular(10)),
                               child: TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    openLinkedIn();
+                                  },
                                   child: FaIcon(
                                     FontAwesomeIcons.linkedin,
                                     color: Colors.blue,
@@ -707,7 +887,9 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                                   color: Colors.blue.withOpacity(0.2),
                                   borderRadius: BorderRadius.circular(10)),
                               child: TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    openGitHub();
+                                  },
                                   child: FaIcon(
                                     FontAwesomeIcons.github,
                                     color: Colors.blue,
@@ -724,7 +906,9 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                                   color: Colors.blue.withOpacity(0.2),
                                   borderRadius: BorderRadius.circular(10)),
                               child: TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    openWhatsApp("919116982831", "Hello 👋 This is a test message!");
+                                  },
                                   child: FaIcon(
                                     FontAwesomeIcons.whatsapp,
                                     color: Colors.blue,
@@ -742,7 +926,7 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                                   border: BoxBorder.all(color: Colors.blue),
                                   borderRadius: BorderRadius.circular(25)),
                               child: TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {openCV();},
                                   child: Text(
                                     "View CV",
                                     style: TextStyle(
@@ -791,7 +975,7 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                           Text(
                             "I'm Yogesh Dadhich, a passionate Flutter Developer with hands-on experience in building scalable, high-performance mobile applications. With a strong foundation in Dart, Java, Firebase, and RESTful APIs, I specialize in cross-platform app development using Flutter for Android, iOS, web, and desktop. I've contributed to multiple projects across e-commerce, legal services, education, and warehouse management, including published apps like TQNEEN, Easy Store, and AL-MANAR Private School App. My work consistently focuses on optimizing performance and enhancing user experience—such as achieving a 30% load time reduction and a 20% boost in user retention at Startup Defenders. I follow clean architecture principles, apply SOLID and OOP design patterns, and bring practical knowledge in CI/CD, automated testing, and agile methodologies. Beyond technical skills, I'm known for my adaptability, teamwork, and strong problem-solving capabilities.",
                             style: TextStyle(
-                                color: Colors.white60,
+                                color:Thememode?Colors.white60:Colors.black,
                                 fontSize: 18.5,
                                 fontWeight: FontWeight.w300),
                             textAlign: TextAlign.justify,
@@ -816,8 +1000,8 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                         Text(
                           "Skills   ",
                           style: GoogleFonts.rubik(
-                            textStyle: const TextStyle(
-                              color: Colors.white,
+                            textStyle:  TextStyle(
+                              color: Thememode?Colors.white:Colors.black,
                               fontWeight: FontWeight.w700,
                               fontSize: 29,
                               letterSpacing: 1,
@@ -988,7 +1172,7 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                                 color: Color(0xff0D1D2D),
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
-                                    color: Colors.white10, width: 2)),
+                                    color: Thememode?Colors.white10:Colors.black, width: 2)),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
@@ -1030,8 +1214,8 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                             Text(
                               "Experience   ",
                               style: GoogleFonts.rubik(
-                                textStyle: const TextStyle(
-                                  color: Colors.white,
+                                textStyle: TextStyle(
+                                  color: Thememode?Colors.white:Colors.black,
                                   fontWeight: FontWeight.w700,
                                   fontSize: 29,
                                   letterSpacing: 1,
@@ -1051,16 +1235,17 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                       height: 50,
                     ),
                     TimelineTile(
-
                         alignment: TimelineAlign.start,
                         isFirst: true,
                         indicatorStyle: IndicatorStyle(
                           indicator: Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: const Color(0xff006cfa), // inner filled color
+                              color:
+                                  const Color(0xff006cfa), // inner filled color
                               border: Border.all(
-                                color: const Color(0xff003f9a), // outer circle border color
+                                color: const Color(
+                                    0xff003f9a), // outer circle border color
                                 width: 3, // border thickness
                               ),
                             ),
@@ -1068,7 +1253,6 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                           indicatorXY: 0.0,
                           width: 20,
                           color: Color(0xff006cfa),
-
                         ),
                         beforeLineStyle: const LineStyle(
                           color: Color(0xff006cfa),
@@ -1078,20 +1262,21 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                         afterLineStyle: const LineStyle(
                           color: Color(0xff006cfa),
                           thickness:
-                          1.5, // 👈 dono lines same rakho for uniform look
+                              1.5, // 👈 dono lines same rakho for uniform look
                         ),
                         endChild: Padding(
-                          padding: const EdgeInsets.only(top: 0 ,left: 20,right: 20),
+                          padding: const EdgeInsets.only(
+                              top: 0, left: 20, right: 20),
                           child: Container(
                             height: MediaQuery.of(context).size.height * 0.17,
                             width: MediaQuery.of(context).size.width * 0.02,
                             decoration: BoxDecoration(
-                                border: Border.all(color: Color(0xff006cfa),width: 0.5),
+                                border: Border.all(
+                                    color: Color(0xff006cfa), width: 0.5),
                                 color: Color(0xff191d36),
                                 borderRadius: BorderRadius.circular(10)),
                           ),
-                        )
-                    ),
+                        )),
                     TimelineTile(
                         alignment: TimelineAlign.start,
                         indicatorStyle: IndicatorStyle(
@@ -1099,129 +1284,11 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                           indicator: Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: const Color(0xff006cfa), // inner filled color
+                              color:
+                                  const Color(0xff006cfa), // inner filled color
                               border: Border.all(
-                                color: const Color(0xff003f9a), // outer circle border color
-                                width: 3, // border thickness
-                              ),
-                            ),
-                          ),
-                          width: 20,
-                          color: Color(0xff006cfa),
-                        ),
-                        beforeLineStyle: const LineStyle(
-                          color: Color(0xff006cfa),
-                          thickness:
-                          1.5, // 👈 yahan line ki motaai (kam/badh) kar sakte ho
-                        ),
-                        afterLineStyle: const LineStyle(
-                          color: Color(0xff006cfa),
-                          thickness:
-                          1.5, // 👈 dono lines same rakho for uniform look
-                        ),
-                        endChild: Padding(
-                          padding: const EdgeInsets.only(top:45 ,left: 20,right: 20),
-                          child: Container(
-                            height: MediaQuery.of(context).size.height * 0.17,
-                            width: MediaQuery.of(context).size.width * 0.02,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Color(0xff006cfa),width: 0.5),
-                                color: Color(0xff191d36),
-                                borderRadius: BorderRadius.circular(10)),
-                          ),
-                        )
-                    ),
-                    TimelineTile(
-                        alignment: TimelineAlign.start,
-
-                        indicatorStyle: IndicatorStyle(
-                          indicatorXY: 0.3,
-                          indicator: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: const Color(0xff006cfa), // inner filled color
-                              border: Border.all(
-                                color: const Color(0xff003f9a), // outer circle border color
-                                width: 3, // border thickness
-                              ),
-                            ),
-                          ),
-                          width: 20,
-                          color: Color(0xff006cfa),
-                        ),
-                        beforeLineStyle: const LineStyle(
-                          color: Color(0xff006cfa),
-                          thickness:
-                          1.5, // 👈 yahan line ki motaai (kam/badh) kar sakte ho
-                        ),
-                        afterLineStyle: const LineStyle(
-                          color: Color(0xff006cfa),
-                          thickness:
-                          1.5, // 👈 dono lines same rakho for uniform look
-                        ),
-                        endChild: Padding(
-                          padding: const EdgeInsets.only(top: 45 ,left: 20,right: 20),
-                          child: Container(
-                            height: MediaQuery.of(context).size.height * 0.17,
-                            width: MediaQuery.of(context).size.width * 0.02,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Color(0xff006cfa),width: 0.5),
-                                color: Color(0xff191d36),
-                                borderRadius: BorderRadius.circular(10)),
-                          ),
-                        )
-                    ),
-                    TimelineTile(
-                        alignment: TimelineAlign.start,
-
-                        indicatorStyle: IndicatorStyle(
-                          indicatorXY: 0.3,
-                          indicator: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: const Color(0xff006cfa), // inner filled color
-                              border: Border.all(
-                                color: const Color(0xff003f9a), // outer circle border color
-                                width: 3, // border thickness
-                              ),
-                            ),
-                          ),
-                          width: 20,
-                          color: Color(0xff006cfa),
-                        ),
-                        beforeLineStyle: const LineStyle(
-                          color: Color(0xff006cfa),
-                          thickness:
-                          1.5, // 👈 yahan line ki motaai (kam/badh) kar sakte ho
-                        ),
-                        afterLineStyle: const LineStyle(
-                          color: Color(0xff006cfa),
-                          thickness:
-                          1.5, // 👈 dono lines same rakho for uniform look
-                        ),
-                        endChild: Padding(
-                          padding: const EdgeInsets.only(top: 45 ,left: 20,right: 20),
-                          child: Container(
-                            height: MediaQuery.of(context).size.height * 0.17,
-                            width: MediaQuery.of(context).size.width * 0.02,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Color(0xff006cfa),width: 0.4),
-                                color: Color(0xff191d36),
-                                borderRadius: BorderRadius.circular(10)),
-                          ),
-                        )
-                    ),
-                    TimelineTile(
-                        alignment: TimelineAlign.start,
-
-                        indicatorStyle: IndicatorStyle(
-                          indicatorXY: 0.3,
-                          indicator: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: const Color(0xff006cfa), // inner filled color
-                              border: Border.all(
-                                color: const Color(0xff003f9a), // outer circle border color
+                                color: const Color(
+                                    0xff003f9a), // outer circle border color
                                 width: 3, // border thickness
                               ),
                             ),
@@ -1240,17 +1307,144 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                               1.5, // 👈 dono lines same rakho for uniform look
                         ),
                         endChild: Padding(
-                          padding: const EdgeInsets.only(top: 45 ,left: 20,right: 20),
+                          padding: const EdgeInsets.only(
+                              top: 45, left: 20, right: 20),
                           child: Container(
                             height: MediaQuery.of(context).size.height * 0.17,
                             width: MediaQuery.of(context).size.width * 0.02,
                             decoration: BoxDecoration(
-                              border: Border.all(color: Color(0xff006cfa),width: 0.4),
+                                border: Border.all(
+                                    color: Color(0xff006cfa), width: 0.5),
                                 color: Color(0xff191d36),
                                 borderRadius: BorderRadius.circular(10)),
                           ),
-                        )
-                    ),
+                        )),
+                    TimelineTile(
+                        alignment: TimelineAlign.start,
+                        indicatorStyle: IndicatorStyle(
+                          indicatorXY: 0.3,
+                          indicator: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color:
+                                  const Color(0xff006cfa), // inner filled color
+                              border: Border.all(
+                                color: const Color(
+                                    0xff003f9a), // outer circle border color
+                                width: 3, // border thickness
+                              ),
+                            ),
+                          ),
+                          width: 20,
+                          color: Color(0xff006cfa),
+                        ),
+                        beforeLineStyle: const LineStyle(
+                          color: Color(0xff006cfa),
+                          thickness:
+                              1.5, // 👈 yahan line ki motaai (kam/badh) kar sakte ho
+                        ),
+                        afterLineStyle: const LineStyle(
+                          color: Color(0xff006cfa),
+                          thickness:
+                              1.5, // 👈 dono lines same rakho for uniform look
+                        ),
+                        endChild: Padding(
+                          padding: const EdgeInsets.only(
+                              top: 45, left: 20, right: 20),
+                          child: Container(
+                            height: MediaQuery.of(context).size.height * 0.17,
+                            width: MediaQuery.of(context).size.width * 0.02,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Color(0xff006cfa), width: 0.5),
+                                color: Color(0xff191d36),
+                                borderRadius: BorderRadius.circular(10)),
+                          ),
+                        )),
+                    TimelineTile(
+                        alignment: TimelineAlign.start,
+                        indicatorStyle: IndicatorStyle(
+                          indicatorXY: 0.3,
+                          indicator: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color:
+                                  const Color(0xff006cfa), // inner filled color
+                              border: Border.all(
+                                color: const Color(
+                                    0xff003f9a), // outer circle border color
+                                width: 3, // border thickness
+                              ),
+                            ),
+                          ),
+                          width: 20,
+                          color: Color(0xff006cfa),
+                        ),
+                        beforeLineStyle: const LineStyle(
+                          color: Color(0xff006cfa),
+                          thickness:
+                              1.5, // 👈 yahan line ki motaai (kam/badh) kar sakte ho
+                        ),
+                        afterLineStyle: const LineStyle(
+                          color: Color(0xff006cfa),
+                          thickness:
+                              1.5, // 👈 dono lines same rakho for uniform look
+                        ),
+                        endChild: Padding(
+                          padding: const EdgeInsets.only(
+                              top: 45, left: 20, right: 20),
+                          child: Container(
+                            height: MediaQuery.of(context).size.height * 0.17,
+                            width: MediaQuery.of(context).size.width * 0.02,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Color(0xff006cfa), width: 0.4),
+                                color: Color(0xff191d36),
+                                borderRadius: BorderRadius.circular(10)),
+                          ),
+                        )),
+                    TimelineTile(
+                        alignment: TimelineAlign.start,
+                        indicatorStyle: IndicatorStyle(
+                          indicatorXY: 0.3,
+                          indicator: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color:
+                                  const Color(0xff006cfa), // inner filled color
+                              border: Border.all(
+                                color: const Color(
+                                    0xff003f9a), // outer circle border color
+                                width: 3, // border thickness
+                              ),
+                            ),
+                          ),
+                          width: 20,
+                          color: Color(0xff006cfa),
+                        ),
+                        beforeLineStyle: const LineStyle(
+                          color: Color(0xff006cfa),
+                          thickness:
+                              1.5, // 👈 yahan line ki motaai (kam/badh) kar sakte ho
+                        ),
+                        afterLineStyle: const LineStyle(
+                          color: Color(0xff006cfa),
+                          thickness:
+                              1.5, // 👈 dono lines same rakho for uniform look
+                        ),
+                        endChild: Padding(
+                          padding: const EdgeInsets.only(
+                              top: 45, left: 20, right: 20),
+                          child: Container(
+                            height: MediaQuery.of(context).size.height * 0.17,
+                            width: MediaQuery.of(context).size.width * 0.02,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Color(0xff006cfa), width: 0.4),
+                                color: Color(0xff191d36),
+                                borderRadius: BorderRadius.circular(10)),
+                          ),
+                        )),
                   ],
                 ),
 
@@ -1269,8 +1463,8 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                         Text(
                           "Projects   ",
                           style: GoogleFonts.rubik(
-                            textStyle: const TextStyle(
-                              color: Colors.white,
+                            textStyle:  TextStyle(
+                              color: Thememode?Colors.white:Colors.black,
                               fontWeight: FontWeight.w700,
                               fontSize: 29,
                               letterSpacing: 1,
@@ -1278,83 +1472,71 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        Image.asset(
-                            "assets/images/rocket.png",
-                            height: 60,
-                            width: 60),
-
+                        Image.asset("assets/images/rocket.png",
+                            height: 60, width: 60),
                       ],
                     ),
                     SizedBox(
                       height: 30,
                     ),
-                    Text("Here are some of my projects that i have worked on:", style: TextStyle(color: Colors.white60,fontSize: 20),textAlign:TextAlign.start ,),
+                    Text(
+                      "Here are some of my projects that i have worked on:",
+                      style: TextStyle(color: Thememode?Colors.white60:Colors.black, fontSize: 20),
+                      textAlign: TextAlign.start,
+                    ),
                     Row(
                       children: [
                         Container(
                           height: 150,
                           width: 150,
                           decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(11),
-                            border: Border.all(color: Colors.black87)
-                          ),
-                          child:Image.asset(
-                              "assets/images/app_logo.png",
-                              height: 60,
-                              width: 60),
+                              color: Thememode?Colors.white:Colors.black,
+                              borderRadius: BorderRadius.circular(11),
+                              border: Border.all(color: Colors.black87)),
+                          child: Image.asset("assets/images/app_logo.png",
+                              height: 60, width: 60),
                         ),
                         SizedBox(
-                          width: MediaQuery.of(context).size.width*0.04,
+                          width: MediaQuery.of(context).size.width * 0.04,
                         ),
                         Container(
                           height: 150,
                           width: 150,
                           decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: Thememode?Colors.white:Colors.black,
                               borderRadius: BorderRadius.circular(11),
-                              border: Border.all(color: Colors.black87)
-                          ),
-                          child:Image.asset(
-                              "assets/images/project1.png",
-                              height: 60,
-                              width: 60),
+                              border: Border.all(color: Colors.black87)),
+                          child: Image.asset("assets/images/project1.png",
+                              height: 60, width: 60),
                         ),
                         SizedBox(
-                          width: MediaQuery.of(context).size.width*0.04,
+                          width: MediaQuery.of(context).size.width * 0.04,
                         ),
                         Container(
                           height: 150,
                           width: 150,
                           decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: Thememode?Colors.white:Colors.black,
                               borderRadius: BorderRadius.circular(11),
-                              border: Border.all(color: Colors.black87)
-                          ),
-                          child:Image.asset(
-                              "assets/images/Project2.png",
-                              height: 60,
-                              width: 60),
+                              border: Border.all(color: Colors.black87)),
+                          child: Image.asset("assets/images/Project2.png",
+                              height: 60, width: 60),
                         ),
                         SizedBox(
-                          width: MediaQuery.of(context).size.width*0.04,
+                          width: MediaQuery.of(context).size.width * 0.04,
                         ),
                         Container(
                           height: 150,
                           width: 150,
                           decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: Thememode?Colors.white:Colors.black,
                               borderRadius: BorderRadius.circular(11),
-                              border: Border.all(color: Colors.black87)
-                          ),
-                          child:Image.asset(
-                              "assets/images/Project3.png",
-                              height: 60,
-                              width: 60),
+                              border: Border.all(color: Colors.black87)),
+                          child: Image.asset("assets/images/Project3.png",
+                              height: 60, width: 60),
                         )
                       ],
                     )
-
                   ],
                 ),
                 SizedBox(
@@ -1369,8 +1551,8 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                         Text(
                           "Certification   ",
                           style: GoogleFonts.rubik(
-                            textStyle: const TextStyle(
-                              color: Colors.white,
+                            textStyle: TextStyle(
+                              color: Thememode?Colors.white:Colors.black,
                               fontWeight: FontWeight.w700,
                               fontSize: 29,
                               letterSpacing: 1,
@@ -1386,19 +1568,23 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                       ],
                     ),
                     const SizedBox(height: 50),
-                    Text("Personal certificates and achievements that validate my experties:", style: TextStyle(color: Colors.white60,fontSize: 20),textAlign:TextAlign.start ,),
+                    Text(
+                      "Personal certificates and achievements that validate my experties:",
+                      style: TextStyle(color: Thememode?Colors.white60:Colors.black, fontSize: 20),
+                      textAlign: TextAlign.start,
+                    ),
                     const SizedBox(height: 50),
 
                     // 👇 yahan add karo slider
                     SizedBox(
-                      width: MediaQuery.of(context).size.width*0.8,
+                        width: MediaQuery.of(context).size.width * 0.8,
                         child: const CertificationSlider()),
 
                     const SizedBox(height: 30),
                   ],
                 ),
 
-            SizedBox(
+                SizedBox(
                   height: 70,
                 ),
                 Column(
@@ -1410,8 +1596,8 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                         Text(
                           "Get In Touch   ",
                           style: GoogleFonts.rubik(
-                            textStyle: const TextStyle(
-                              color: Colors.white,
+                            textStyle: TextStyle(
+                              color: Thememode?Colors.white:Colors.black,
                               fontWeight: FontWeight.w700,
                               fontSize: 29,
                               letterSpacing: 1,
@@ -1421,27 +1607,347 @@ class _PortfolioState extends State<Portfolio> with TickerProviderStateMixin {
                         ),
                         Lottie.asset(
                           "assets/lottiicons/MessageSent.json",
-                          height: 40,
-                          width: 40,
+                          height: 120,
+                          width: 120,
                         ),
+                      ],
+                    ),
+                    Text(
+                      "Feel free to reach out for collaboration or just a friendly hello",
+                      style: TextStyle(color: Thememode?Colors.white60:Colors.black, fontSize: 20),
+                      textAlign: TextAlign.start,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      //margin: EdgeInsets.symmetric(horizontal: 20),
+                      height: 440,
+
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      decoration: BoxDecoration(
+                          color: Color(0xff1F2C3A),
+                          border: Border.all(color: Thememode?Colors.white:Colors.black),
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Text(
+                              "Send me a message",
+                              style: GoogleFonts.rubik(
+                                textStyle: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 24,
+                                  letterSpacing: 1,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 16, right: 16, top: 10, bottom: 10),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.9,
+                                padding: EdgeInsets.only(left: 10),
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Color(0xff4A5973)),
+                                    color: Color(0xff363E49),
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: TextField(
+                                    controller: NameController,
+                                  style: TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                    labelStyle: TextStyle(color: Colors.blue),
+                                    labelText: "Your Name",
+                                    //labelText: "Your Message",
+                                    // hintText: "Your Name",
+                                    //contentPadding: EdgeInsets.symmetric(vertical: 25,horizontal: 15),
+
+                                    border: InputBorder.none,
+                                  ),
+                                ),
+                              )),
+
+                          Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 16, right: 16, top: 10, bottom: 10),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.9,
+                                padding: EdgeInsets.only(left: 10),
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Color(0xff4A5973)),
+                                    color: Color(0xff363E49),
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: TextField(
+                                  controller: EmailController,
+                                  style: TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                    labelStyle: TextStyle(color: Colors.blue),
+
+                                    labelText: "Your Email",
+                                    //labelText: "Your Message",
+                                    // hintText: "Your Email",
+                                    //contentPadding: EdgeInsets.symmetric(vertical: 25,horizontal: 15),
+
+                                    border: InputBorder.none,
+                                  ),
+                                ),
+                              )),
+
+                          Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 16, right: 16, top: 10, bottom: 10),
+                              child: Container(
+                                height: 130,
+                                padding: EdgeInsets.only(left: 10),
+                                width: MediaQuery.of(context).size.width * 0.9,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Color(0xff363E49),
+                                    border: Border.all(
+                                      color: Color(0xff4A5973),
+                                    )),
+                                child: TextField(
+                                    controller: MessageController,
+                                  style: TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                    labelStyle: TextStyle(color: Colors.blue),
+                                    labelText: "Your Message",
+                                    // hintText: "Your Message",
+
+                                    fillColor: Colors.white,
+                                    //contentPadding: EdgeInsets.symmetric(vertical: 25,horizontal: 15),
+
+                                    border: InputBorder.none,
+                                  ),
+                                ),
+                              )),
+
+                          // SizedBox(height: 10,),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 16, right: 16, top: 10, bottom: 10),
+                            child: Container(
+                                width: MediaQuery.of(context).size.width * 0.9,
+                                height: 46,
+                                decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: TextButton(
+                                    onPressed: () {},
+                                    child: Text(
+                                      "Send Message",
+                                      style: GoogleFonts.rubik(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ))),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 50,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          height: 70,
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          decoration: BoxDecoration(
+                              color: Color(0xff1E293B),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Color(0xff2B3C4F))),
+                          child: ListTile(
+                            title:  Text("ADDRESS",style: GoogleFonts.rubik(color: Colors.blue,fontSize: 12.5,fontWeight: FontWeight.w700  )),
+                            leading:
+                            Container(
+                              height: 50,
+                              width: 50,
+                              decoration: BoxDecoration(
+                                  color: Colors.blue.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Center(
+                                child: Icon(
+                                  Icons.location_on,
+                                  color: Colors.blue,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                            subtitle: Text("Laxmangarh, Sikar, Rajasthan",style:GoogleFonts.rubik(color: Colors.white,fontSize: 12.5,fontWeight: FontWeight.w700 )),
+                          ),
+                        ),
+                        Container(
+                          height: 70,
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          decoration: BoxDecoration(
+                              color: Color(0xff1E293B),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Color(0xff2B3C4F))),
+                          child: ListTile(
+                            title:  Text("PHONE" ,style: GoogleFonts.rubik(color: Colors.blue,fontSize: 12.5,fontWeight: FontWeight.w700)),
+                            leading: Container(
+                              height: 50,
+                              width: 50,
+                              decoration: BoxDecoration(
+                                  color: Colors.blue.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Center(
+                                child: Icon(
+                                  Icons.phone,
+                                  color: Colors.blue,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                            subtitle: Text("9116982831",style:GoogleFonts.rubik(color: Colors.white,fontSize: 12.5,fontWeight: FontWeight.w700 )),
+                          ),
+                        )
                       ],
                     ),
                     SizedBox(
                       height: 20,
                     ),
-                    Text("Feel free to reach out for collaboration or just a friendly hello", style: TextStyle(color: Colors.white60,fontSize: 20),textAlign:TextAlign.start ,),
-                    Container(
-                      height: MediaQuery.of(context).size.height*0.2,
-                      width: MediaQuery.of(context).size.width*0.2,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.white12)
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [],
-                      ),
-                    )
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          height: 70,
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          decoration: BoxDecoration(
+                              color: Color(0xff1E293B),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Color(0xff2B3C4F))),
+                          child: ListTile(
+                            title:  Text("EMAIL",style:GoogleFonts.rubik(color: Colors.blue,fontSize: 12.5,fontWeight: FontWeight.w700)),
+                            leading:
+                            Container(
+                              height: 50,
+                              width: 50,
+                              decoration: BoxDecoration(
+                                  color: Colors.blue.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: TextButton(
+                                  onPressed: () {},
+                                  child: Icon(
+                                    Icons.mail_outline,
+                                    color: Colors.blue,
+                                    size: 20,
+                                  )),
+                            ),
+                            subtitle: Text("dadhichyogesh09@gmail.com",style:GoogleFonts.rubik(color: Colors.white,fontSize: 12.5,fontWeight: FontWeight.w700 )),
+                          ),
+                        ),
+                        Container(
+                          height: 70,
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          decoration: BoxDecoration(
+                              color: Color(0xff1E293B),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Color(0xff2B3C4F))),
+                          child: ListTile(
+                            title:  Text("WHATSAPP",style:GoogleFonts.rubik(color: Colors.blue,fontSize: 12.5,fontWeight: FontWeight.w700)),
+                            leading: Container(
+                              height: 50,
+                              width: 50,
+                              decoration: BoxDecoration(
+                                  color: Colors.blue.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Center(
+                                child: FaIcon(
+                                  FontAwesomeIcons.whatsapp,
+                                  color: Colors.blue,
+                                  size: 20,
+
+                                ),
+                              ),
+                            ),
+                            subtitle: Text("9116982831",style:GoogleFonts.rubik(color: Colors.white,fontSize: 12.5,fontWeight: FontWeight.w700 )),
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          height: 70,
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          decoration: BoxDecoration(
+                              color: Color(0xff1E293B),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Color(0xff2B3C4F))),
+                          child: ListTile(
+                            title:  Text("LINKEDIN",style:GoogleFonts.rubik(color: Colors.blue,fontSize: 12.5,fontWeight: FontWeight.w700)),
+                            leading: Container(
+                              height: 50,
+                              width: 50,
+                              decoration: BoxDecoration(
+                                  color: Colors.blue.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Center(
+                                child: FaIcon(
+                                  FontAwesomeIcons.linkedin,
+                                  color: Colors.blue,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                            subtitle: Text("gjfighfj",style:GoogleFonts.rubik(color: Colors.white,fontSize: 12.5,fontWeight: FontWeight.w700 )),
+                          ),
+                        ),
+                        Container(
+                          height: 70,
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          decoration: BoxDecoration(
+                              color: Color(0xff1E293B),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Color(0xff2B3C4F))),
+                          child: ListTile(
+                            title:  Text("GITHUB",style:GoogleFonts.rubik(color: Colors.blue,fontSize: 12.5,fontWeight: FontWeight.w700)),
+                            leading: Container(
+                              height: 50,
+                              width: 50,
+                              decoration: BoxDecoration(
+                                  color: Colors.blue.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Center(
+                                child: FaIcon(
+                                  FontAwesomeIcons.github,
+                                  color: Colors.blue,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                            subtitle: Text("gjfighfj",style:GoogleFonts.rubik(color: Colors.white,fontSize: 12.5,fontWeight: FontWeight.w700 )),
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
+                ),
+                SizedBox(
+                  height: 70,
+                ),
+                Text(
+                  "Made with Flutter 💙 by Yogesh          ",
+                  style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                      color: Thememode?Colors.white:Colors.black),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(
+                  height: 100,
                 ),
               ],
             ),
